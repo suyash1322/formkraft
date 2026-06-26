@@ -3,12 +3,14 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRouter from './routes/auth';
 import formsRouter from './routes/forms';
+import paymentRouter from './routes/payment';
+
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-
+app.use('/api/payment', paymentRouter);
 app.use(cors());
 app.use(express.json());
 
