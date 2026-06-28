@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import { authMiddleware, AuthRequest } from '../middleware/auth';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma';
@@ -38,6 +39,18 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
     res.json({ token });
   } catch (err) {
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+router.get('/me', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId! },
+      select: { id: true, email: true, plan: true }
+    });
+    res.json(user);
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch user' });
   }
 });
 

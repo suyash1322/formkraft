@@ -60,6 +60,11 @@ export default function DashboardPage() {
     setForms(forms.filter(f => f.id !== id));
   };
 
+  const shareForm = (id: string) => {
+    navigator.clipboard.writeText(`${window.location.origin}/f/${id}`);
+    alert('Link copied!');
+  };
+
   const handleUpgrade = async () => {
     setPaying(true);
     try {
@@ -80,12 +85,12 @@ export default function DashboardPage() {
               razorpay_signature: response.razorpay_signature,
             });
             setPlan('PRO');
-            alert('🎉 Upgraded to Pro!');
+            alert('Upgraded to Pro!');
           } catch {
-            alert('Payment verification failed');
+            alert('Verification failed');
           }
         },
-        theme: { color: '#14b8a6' },
+        theme: { color: '#2dd4bf' },
       };
       const rzp = new window.Razorpay(options);
       rzp.open();
@@ -102,19 +107,17 @@ export default function DashboardPage() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-[#0a0f0f] flex items-center justify-center text-white">Loading...</div>
+    <div className="min-h-screen bg-[#111111] flex items-center justify-center">
+      <div className="animate-spin w-5 h-5 border-2 border-teal-400 border-t-transparent rounded-full" />
+    </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#0a0f0f]">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(20,184,166,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(20,184,166,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
-
-      {/* Navbar */}
-      <nav className="relative border-b border-white/5 px-6 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-[#111111]">
+      <nav className="border-b border-white/8 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
           <div className="w-6 h-6 rounded-md bg-teal-400 flex items-center justify-center">
-            <svg className="w-3.5 h-3.5 text-[#0a0f0f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
@@ -126,59 +129,55 @@ export default function DashboardPage() {
             <button
               onClick={handleUpgrade}
               disabled={paying}
-              className="bg-teal-400 hover:bg-teal-300 text-[#0a0f0f] text-xs font-semibold px-3 py-1.5 rounded-lg transition-all active:scale-95 disabled:opacity-50"
+              className="text-xs text-zinc-400 border border-white/10 px-3 py-1.5 rounded-lg hover:bg-white/5 transition disabled:opacity-50"
             >
               {paying ? 'Processing...' : '⚡ Upgrade to Pro — ₹499'}
             </button>
           ) : (
-            <span className="text-xs bg-teal-400/10 text-teal-400 border border-teal-400/20 px-3 py-1.5 rounded-lg font-medium">
-              ✓ Pro Plan
+            <span className="text-xs text-teal-400 border border-teal-400/20 px-3 py-1.5 rounded-lg">
+              ✓ Pro
             </span>
           )}
-          <button onClick={logout} className="text-xs text-gray-500 hover:text-gray-300 transition">Logout</button>
+          <button onClick={logout} className="text-xs text-zinc-500 hover:text-white transition">
+            Logout
+          </button>
         </div>
       </nav>
 
-      <div className="relative max-w-4xl mx-auto px-6 py-10">
+      <div className="max-w-3xl mx-auto px-6 py-10">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-white">My Forms</h2>
-            <p className="text-gray-500 text-sm mt-1">
-              {plan === 'FREE' ? `${forms.length}/3 forms used` : 'Unlimited forms ✓'}
+            <h1 className="text-lg font-semibold text-white">My Forms</h1>
+            <p className="text-zinc-600 text-xs mt-0.5">
+              {plan === 'FREE' ? `${forms.length} / 3 forms used` : 'Unlimited forms'}
             </p>
           </div>
           <button
             onClick={createForm}
-            className="bg-teal-400 hover:bg-teal-300 text-[#0a0f0f] px-4 py-2 rounded-xl font-semibold text-sm transition-all active:scale-95"
+            className="bg-teal-400 hover:bg-teal-300 text-[#111111] text-sm font-semibold px-4 py-2 rounded-xl transition"
           >
             + New Form
           </button>
         </div>
 
         {forms.length === 0 ? (
-          <div className="text-center py-20 border border-white/5 rounded-2xl">
-            <p className="text-gray-400">No forms yet</p>
-            <p className="text-gray-600 text-sm mt-1">Click "New Form" to get started</p>
+          <div className="border border-white/8 rounded-xl py-16 text-center">
+            <p className="text-zinc-500 text-sm">No forms yet</p>
+            <p className="text-zinc-700 text-xs mt-1">Click "New Form" to get started</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
             {forms.map(form => (
-              <div key={form.id} className="bg-white/5 border border-white/10 p-5 rounded-2xl hover:border-teal-500/30 transition-all">
-                <h3 className="font-semibold text-white mb-1">{form.title}</h3>
-                <p className="text-xs text-gray-500 mb-4">{new Date(form.createdAt).toLocaleDateString()}</p>
+              <div key={form.id} className="border border-white/8 rounded-xl px-5 py-4 flex items-center justify-between hover:border-white/15 transition">
+                <div>
+                  <p className="text-white text-sm font-medium">{form.title}</p>
+                  <p className="text-zinc-600 text-xs mt-0.5">{new Date(form.createdAt).toLocaleDateString()}</p>
+                </div>
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => router.push(`/forms/${form.id}`)}
-                    className="flex-1 bg-teal-400/10 text-teal-400 py-2 rounded-lg text-sm font-medium hover:bg-teal-400/20 transition"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteForm(form.id)}
-                    className="flex-1 bg-red-400/10 text-red-400 py-2 rounded-lg text-sm font-medium hover:bg-red-400/20 transition"
-                  >
-                    Delete
-                  </button>
+                  <button onClick={() => router.push(`/forms/${form.id}`)} className="text-xs text-zinc-400 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-white/5 transition">Edit</button>
+                  <button onClick={() => shareForm(form.id)} className="text-xs text-zinc-400 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-white/5 transition">Share</button>
+                  <button onClick={() => router.push(`/forms/${form.id}/responses`)} className="text-xs text-zinc-400 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-white/5 transition">Responses</button>
+                  <button onClick={() => deleteForm(form.id)} className="text-xs text-red-500/60 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-red-500/5 transition">Delete</button>
                 </div>
               </div>
             ))}
