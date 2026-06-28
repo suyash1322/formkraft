@@ -114,8 +114,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#111111]">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b border-white/8 px-6 py-4 flex justify-between items-center bg-[#111111]/90 backdrop-blur-sm">
+      <nav className="border-b border-white/8 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
           <div className="w-6 h-6 rounded-md bg-teal-400 flex items-center justify-center">
             <svg className="w-3.5 h-3.5 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,19 +129,13 @@ export default function DashboardPage() {
             <button
               onClick={handleUpgrade}
               disabled={paying}
-              className="text-xs text-zinc-400 border border-white/10 px-3 py-1.5 rounded-lg hover:bg-white/5 transition disabled:opacity-50 flex items-center gap-1.5"
+              className="text-xs text-zinc-400 border border-white/10 px-3 py-1.5 rounded-lg hover:bg-white/5 transition disabled:opacity-50"
             >
-              <svg className="w-3 h-3 text-teal-400" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              {paying ? 'Processing...' : 'Upgrade to Pro — ₹499'}
+              {paying ? 'Processing...' : '⚡ Upgrade to Pro — ₹499'}
             </button>
           ) : (
-            <span className="text-xs text-teal-400 border border-teal-400/20 bg-teal-400/5 px-3 py-1.5 rounded-lg flex items-center gap-1">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Pro
+            <span className="text-xs text-teal-400 border border-teal-400/20 px-3 py-1.5 rounded-lg">
+              ✓ Pro
             </span>
           )}
           <button onClick={logout} className="text-xs text-zinc-500 hover:text-white transition">
@@ -151,64 +144,40 @@ export default function DashboardPage() {
         </div>
       </nav>
 
-      <div className="max-w-4xl mx-auto px-6 py-10">
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
-          {[
-            { label: 'Total Forms', value: forms.length },
-            { label: 'Plan', value: plan === 'PRO' ? 'Pro' : 'Free' },
-            { label: 'Forms Left', value: plan === 'PRO' ? '∞' : `${3 - forms.length}` },
-          ].map(stat => (
-            <div key={stat.label} className="border border-white/8 rounded-xl px-4 py-3">
-              <p className="text-zinc-500 text-xs mb-1">{stat.label}</p>
-              <p className="text-white font-semibold text-lg">{stat.value}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex justify-between items-center mb-5">
-          <h1 className="text-lg font-semibold text-white">My Forms</h1>
+      <div className="max-w-3xl mx-auto px-6 py-10">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-lg font-semibold text-white">My Forms</h1>
+            <p className="text-zinc-600 text-xs mt-0.5">
+              {plan === 'FREE' ? `${forms.length} / 3 forms used` : 'Unlimited forms'}
+            </p>
+          </div>
           <button
             onClick={createForm}
-            className="bg-teal-400 hover:bg-teal-300 text-[#111111] text-sm font-semibold px-4 py-2 rounded-xl transition flex items-center gap-1.5"
+            className="bg-teal-400 hover:bg-teal-300 text-[#111111] text-sm font-semibold px-4 py-2 rounded-xl transition"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-            </svg>
-            New Form
+            + New Form
           </button>
         </div>
 
         {forms.length === 0 ? (
-          <div className="border border-dashed border-white/10 rounded-2xl py-20 text-center">
-            <div className="w-12 h-12 border border-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <svg className="w-5 h-5 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
+          <div className="border border-white/8 rounded-xl py-16 text-center">
             <p className="text-zinc-500 text-sm">No forms yet</p>
             <p className="text-zinc-700 text-xs mt-1">Click "New Form" to get started</p>
           </div>
         ) : (
           <div className="space-y-2">
             {forms.map(form => (
-              <div key={form.id} className="border border-white/8 rounded-xl px-5 py-4 flex items-center justify-between hover:border-white/15 transition group">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-teal-400/10 border border-teal-400/20 rounded-lg flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-white text-sm font-medium">{form.title}</p>
-                    <p className="text-zinc-600 text-xs mt-0.5">{new Date(form.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-                  </div>
+              <div key={form.id} className="border border-white/8 rounded-xl px-5 py-4 flex items-center justify-between hover:border-white/15 transition">
+                <div>
+                  <p className="text-white text-sm font-medium">{form.title}</p>
+                  <p className="text-zinc-600 text-xs mt-0.5">{new Date(form.createdAt).toLocaleDateString()}</p>
                 </div>
-                <div className="flex gap-2 opacity-70 group-hover:opacity-100 transition">
-                  <button onClick={() => router.push(`/forms/${form.id}`)} className="text-xs text-zinc-400 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-white/5 hover:text-white transition">Edit</button>
-                  <button onClick={() => shareForm(form.id)} className="text-xs text-zinc-400 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-white/5 hover:text-white transition">Share</button>
-                  <button onClick={() => router.push(`/forms/${form.id}/responses`)} className="text-xs text-zinc-400 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-white/5 hover:text-white transition">Responses</button>
-                  <button onClick={() => deleteForm(form.id)} className="text-xs text-red-500/60 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-red-500/5 hover:text-red-400 transition">Delete</button>
+                <div className="flex gap-2">
+                  <button onClick={() => router.push(`/forms/${form.id}`)} className="text-xs text-zinc-400 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-white/5 transition">Edit</button>
+                  <button onClick={() => shareForm(form.id)} className="text-xs text-zinc-400 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-white/5 transition">Share</button>
+                  <button onClick={() => router.push(`/forms/${form.id}/responses`)} className="text-xs text-zinc-400 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-white/5 transition">Responses</button>
+                  <button onClick={() => deleteForm(form.id)} className="text-xs text-red-500/60 border border-white/8 px-3 py-1.5 rounded-lg hover:bg-red-500/5 transition">Delete</button>
                 </div>
               </div>
             ))}
